@@ -9,13 +9,13 @@ df.drop(columns=["CustomerID"], inplace=True)
 # raw category values. Encoding them here (e.g. LabelEncoder) would make training
 # and serving use different representations, silently breaking predictions.
 
-target = "ProdTaken"  # complete the code to set the name of the column to predict (whether customer purchased the package), 1 if the customer purchased the package, else 0
+target = "ProdTaken"  
 X = df.drop(columns=[target])
 y = df[target]
 
 # stratify keeps the (imbalanced) purchase ratio consistent across splits
 Xtrain, Xtest, ytrain, ytest = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y  # complete the code: which variable should stay balanced across the splits?
+    X, y, test_size=0.2, random_state=42, stratify=y  
 )
 
 Xtrain.to_csv("Xtrain.csv", index=False)
