@@ -19,9 +19,9 @@ Xtest = pd.read_csv("Xtest.csv")
 ytrain = pd.read_csv("ytrain.csv").squeeze()
 ytest = pd.read_csv("ytest.csv").squeeze()
 
-numeric_features = [num_cols]   
+numeric_features = [num_cols]
 
-categorical_features = [cat_cols]   
+categorical_features = [cat_cols]
 
 # Set the class weight to handle class imbalance
 class_weight = ytrain.value_counts()[0] / ytrain.value_counts()[1]
