@@ -4,7 +4,7 @@ import pandas as pd
 import joblib
 
 # Load the model committed by the pipeline (sits next to this file)
-model_path = os.path.join(os.path.dirname(__file__), "best_predictor_model_v1.joblib")   
+model_path = os.path.join(os.path.dirname(__file__), "best_predictor_model_v1.joblib")
 model = joblib.load(model_path)
 
 # Streamlit UI for Tourism Package Prediction
@@ -60,7 +60,7 @@ classification_threshold = 0.55
 
 # Predict button
 if st.button("Predict"):
-    prob = model.predict_proba(input_data)[0,1]
+    prob = model.predict_proba(input_data)[0, 1]
     pred = int(prob >= classification_threshold)
     result = "will purchase the travel package" if pred == 1 else "is unlikely to purchase"
     st.write(f"Prediction: Customer {result}")
