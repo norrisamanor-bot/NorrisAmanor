@@ -4,6 +4,9 @@ from sklearn.model_selection import train_test_split
 df = pd.read_csv("tourism_project/data/tourism.csv")
 df.drop(columns=["CustomerID"], inplace=True)
 
+# Replacing Fe Male with Female in the Gender column
+df['Gender'] = df['Gender'].replace('Fe Male', 'Female')
+
 # NOTE: categorical columns are intentionally left as raw strings.
 # The training pipeline one-hot-encodes them, and the Streamlit app also sends
 # raw category values. Encoding them here (e.g. LabelEncoder) would make training
