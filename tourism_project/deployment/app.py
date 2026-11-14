@@ -3,15 +3,15 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Load the model committed by the pipeline (sits next to this file)
-model_path = os.path.join(os.path.dirname(__file__), "best_predictor_model_v1.joblib")   
+# Loading the model committed by the pipeline (sits next to this file)
+model_path = os.path.join(os.path.dirname(__file__), "best_predictor_model_v1.joblib")
 model = joblib.load(model_path)
 
 # Streamlit UI for Tourism Package Prediction
 st.title("Tourism Package Prediction")
 st.write("Fill the customer details below to predict if they'll purchase a travel package")
 
-# Collect user input
+# Collecting user input
 Age = st.slider("Age", 18, 70, 30)
 TypeofContact = st.selectbox("Type of Contact", ["Self Enquiry", "Company Invited"])
 CityTier = st.selectbox("City Tier", [1, 2, 3])
@@ -32,7 +32,7 @@ Designation = st.selectbox("Designation", ["Executive", "Manager", "AVP", "VP", 
 MonthlyIncome = st.number_input("Monthly Income", min_value=1000.0, value=30000.0)
 
 # ----------------------------
-# Prepare input data
+# Preparing input data
 # ----------------------------
 input_data = pd.DataFrame([{
     'Age': Age,
@@ -55,10 +55,10 @@ input_data = pd.DataFrame([{
     'MonthlyIncome': MonthlyIncome
 }])
 
-# Set the classification threshold
+# Setting the classification threshold
 classification_threshold = 0.55
 
-# Predict button
+# Prediction button
 if st.button("Predict"):
     prob = model.predict_proba(input_data)[0,1]
     pred = int(prob >= classification_threshold)
