@@ -2,10 +2,10 @@ import pandas as pd
 
 RAW_PATH = "tourism_project/data/tourism.csv"
 
-# Load the raw dataset
+# Loading the raw dataset
 df = pd.read_csv(RAW_PATH)
 
-# Validate that the expected columns are present before registering it
+# Validating the expected columns are present before registering it
 expected_columns = [
     "CustomerID", "ProdTaken", "Age", "TypeofContact", "CityTier",
     "DurationOfPitch", "Occupation", "Gender", "NumberOfPersonVisiting",
