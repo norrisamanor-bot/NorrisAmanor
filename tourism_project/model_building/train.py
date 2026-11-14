@@ -23,37 +23,37 @@ numeric_features = [num_cols]
 
 categorical_features = [cat_cols]
 
-# Set the class weight to handle class imbalance
+# Setting the class weight to handle class imbalance
 class_weight = ytrain.value_counts()[0] / ytrain.value_counts()[1]
 
-# Define the preprocessing steps
+# Defining the preprocessing steps
 preprocessor = make_column_transformer(
     (StandardScaler(), numeric_features),
     (OneHotEncoder(handle_unknown='ignore'), categorical_features)
 )
-# Define base XGBoost model
+# Defining base XGBoost model
 xgb_model = xgb.XGBClassifier(scale_pos_weight=class_weight, random_state=42)
 
-# Define hyperparameter grid
-# Fill in suitable values for each parameter based on your understanding of XGBoost tuning.
+# Defining hyperparameter grid
+# Filling in suitable values for each parameter based on your understanding of XGBoost tuning.
 param_grid = {
     'xgbclassifier__n_estimators': [50, 75, 100],        # Number of boosting trees. More trees can improve performance but increase training time.
-    'xgbclassifier__max_depth': [2, 3],           # Maximum depth of each tree. Higher values increase model complexity and risk of overfitting.
-    'xgbclassifier__colsample_bytree': [0.4, 0.6],    # Fraction of features sampled when building each tree.
-    'xgbclassifier__colsample_bylevel': [0.4, 0.6],   # Fraction of features sampled at each tree level.
-    'xgbclassifier__learning_rate': [0.01, 0.1],       # Step size used during boosting. Smaller values may improve generalization but require more trees.
-    'xgbclassifier__reg_lambda': [0.4, 0.6],          # L2 regularization strength. Higher values help reduce overfitting.
+    'xgbclassifier__max_depth': [2, 3],                  # Maximum depth of each tree. Higher values increase model complexity and risk of overfitting.
+    'xgbclassifier__colsample_bytree': [0.4, 0.6],       # Fraction of features sampled when building each tree.
+    'xgbclassifier__colsample_bylevel': [0.4, 0.6],      # Fraction of features sampled at each tree level.
+    'xgbclassifier__learning_rate': [0.01, 0.1],         # Step size used during boosting. Smaller values may improve generalization but require more trees.
+    'xgbclassifier__reg_lambda': [0.4, 0.6],             # L2 regularization strength. Higher values help reduce overfitting.
 }
-# Model pipeline
-model_pipeline = make_pipeline(preprocessor, xgb_model)   # complete the code to build the model pipeline by chaining preprocessor and xgb_model
+# Creating the Model pipeline
+model_pipeline = make_pipeline(preprocessor, xgb_model) 
 
-# Start MLflow run
+# Starting the MLflow run
 with mlflow.start_run():
     # Hyperparameter tuning with GridSearchCV
     grid_search = GridSearchCV(model_pipeline, param_grid, cv=5, n_jobs=-1)
     grid_search.fit(Xtrain, ytrain)
 
-    # Log every parameter combination tried during the search as a nested run,
+    # Logging every parameter combination tried during the search as a nested run,
     # so all experiments can be compared side by side in the MLflow UI
     results = grid_search.cv_results_
     for i in range(len(results["params"])):
@@ -62,16 +62,16 @@ with mlflow.start_run():
             mlflow.log_metric("mean_test_score", results["mean_test_score"][i])
             mlflow.log_metric("std_test_score", results["std_test_score"][i])
 
-    # Log the best hyperparameters in the main run
+    # Logging the best hyperparameters in the main run
     mlflow.log_params(grid_search.best_params_)
 
-    # Store the best model
+    # Storing the best model
     best_model = grid_search.best_estimator_
 
-    # Set classification threshold
-    classification_threshold = 0.55 
+    # Setting up the classification threshold
+    classification_threshold = 0.55
 
-    # Make predictions on the training and test data
+    # Making predictions on the training and test data
     y_pred_train_proba = best_model.predict_proba(Xtrain)[:, 1]
     y_pred_train = (y_pred_train_proba >= classification_threshold).astype(int)
 
@@ -82,7 +82,7 @@ with mlflow.start_run():
     train_report = classification_report(ytrain, y_pred_train, output_dict=True)
     test_report = classification_report(ytest, y_pred_test, output_dict=True)
 
-    # Log metrics
+    # Logging metrics
     mlflow.log_metrics({
         "train_accuracy": train_report['accuracy'],
         "train_precision": train_report['1']['precision'],
