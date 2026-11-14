@@ -45,7 +45,7 @@ param_grid = {
     'xgbclassifier__reg_lambda': [0.4, 0.6],             # L2 regularization strength. Higher values help reduce overfitting.
 }
 # Creating the Model pipeline
-model_pipeline = make_pipeline(preprocessor, xgb_model) 
+model_pipeline = make_pipeline(preprocessor, xgb_model)
 
 # Starting the MLflow run
 with mlflow.start_run():
@@ -93,3 +93,10 @@ with mlflow.start_run():
         "test_recall": test_report['1']['recall'],
         "test_f1-score": test_report['1']['f1-score']
     })
+
+    # Save next to app.py so the Streamlit app can load it directly, and log
+    # it as an MLflow artifact for traceability
+    model_path = "tourism_project/deployment/best_predictor_model_v1.joblib"
+    joblib.dump(best_model, model_path)
+    mlflow.log_artifact(model_path, artifact_path="model")
+    print(f"Model saved to {model_path}")
