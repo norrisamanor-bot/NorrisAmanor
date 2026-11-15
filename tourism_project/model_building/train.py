@@ -139,7 +139,7 @@ with mlflow.start_run():
         y_pred_test_proba >= classification_threshold
     ).astype(int)
 
-  
+
     # Evaluating the reports
     train_report = classification_report(
         ytrain,
@@ -165,7 +165,7 @@ with mlflow.start_run():
         "test_f1_score": test_report["1"]["f1-score"]
     })
 
-   
+
     # Saving the Model for Streamlit Deployment
     project_root = Path("tourism_project")
 
