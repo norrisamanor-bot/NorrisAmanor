@@ -2,15 +2,13 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 df = pd.read_csv("tourism_project/data/tourism.csv")
-df.drop(columns=["CustomerID"], inplace=True)
+
+# Dropping the 'Unnamed: 0' and 'CustomerID' columns from the dataset
+columns_to_drop = [col for col in ['Unnamed: 0', 'CustomerID'] if col in df.columns]
+df.drop(columns=columns_to_drop, inplace=True)
 
 # Replacing Fe Male with Female in the Gender column
 df['Gender'] = df['Gender'].replace('Fe Male', 'Female')
-
-# NOTE: categorical columns are intentionally left as raw strings.
-# The training pipeline one-hot-encodes them, and the Streamlit app also sends
-# raw category values. Encoding them here (e.g. LabelEncoder) would make training
-# and serving use different representations, silently breaking predictions.
 
 target = "ProdTaken"
 X = df.drop(columns=[target])
